@@ -40,7 +40,8 @@ import com.example.devops.ui.features.auth.login.components.WelcomeSection
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onLoginSuccess: () -> Unit = {}
+    onLoginSuccess: () -> Unit = {},
+    onGithubButtonClick: () -> Unit = {},
 ) {
     val uiState = true
 
@@ -57,11 +58,11 @@ fun LoginScreen(
     )
 
     // Handle login success
-    LaunchedEffect(uiState) {
-        if (uiState) {
-            onLoginSuccess()
-        }
-    }
+//    LaunchedEffect(uiState) {
+//        if (uiState) {
+//            onLoginSuccess()
+//        }
+//    }
 
     Box(
         modifier = modifier
@@ -110,7 +111,7 @@ fun LoginScreen(
             // GitHub login button
             GitHubLoginButton(
                 isLoading = false,
-                onClick = {}
+                onClick = onGithubButtonClick
             )
 
             Spacer(modifier = Modifier.height(24.dp))
