@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.devops.ui.features.onBoarding.components.AnimatedBackground
 import com.example.devops.ui.features.onBoarding.components.NavigationButtons
 import com.example.devops.ui.features.onBoarding.components.OnboardingPageContent
 import com.example.devops.ui.features.onBoarding.components.PageIndicators

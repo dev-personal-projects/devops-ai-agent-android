@@ -22,8 +22,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -61,13 +65,18 @@ fun NavigationButtons(
         ) {
             OutlinedButton(
                 onClick = onPrevious,
-                modifier = Modifier.size(56.dp),
+                //modifier = Modifier.size(56.dp),
                 shape = CircleShape,
-//                colors = OutlinedButtonDefaults.colors(
-//                    contentColor = MaterialTheme.colorScheme.primary
-//                )
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.primary
+                )
             ) {
-                Text("←", fontSize = 20.sp)
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Previous",
+                    modifier = Modifier.size(24.dp)
+                )
+                //Text("←", fontSize = 20.sp)
             }
         }
 
@@ -114,7 +123,7 @@ fun NavigationButtons(
                     
                     if (!isLast) {
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("→", fontSize = 16.sp)
+                        //Text("→", fontSize = 16.sp)
                     } else {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("✨", fontSize = 16.sp)
