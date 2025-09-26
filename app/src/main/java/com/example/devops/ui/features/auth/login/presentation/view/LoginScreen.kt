@@ -1,4 +1,4 @@
-package com.example.devops.ui.features.auth.login.view
+package com.example.devops.ui.features.auth.login.presentation.view
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing

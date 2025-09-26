@@ -7,24 +7,18 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.devops.sharedPrefs.onBoardPref.OnboardingPreferencesManager
-import com.example.devops.ui.features.auth.login.view.LoginScreen
+import com.example.devops.ui.features.auth.login.presentation.view.LoginScreen
 import com.example.devops.ui.features.home.view.HomeScreen
 import com.example.devops.ui.features.onBoarding.view.OnboardingScreen
-import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationGraph(
