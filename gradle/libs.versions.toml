@@ -12,6 +12,9 @@ navigationRuntimeKtx = "2.9.5"
 
 navigationRuntimeAndroid = "2.9.5"
 navigationComposeAndroid = "2.9.5"
+animation = "1.9.2"
+tvMaterial = "1.0.1"
+runtime = "1.0.0-alpha06"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +35,9 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 
 androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
 androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
+androidx-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "animation" }
+androidx-tv-material = { group = "androidx.tv", name = "tv-material", version.ref = "tvMaterial" }
+androidx-runtime = { group = "androidx.xr.runtime", name = "runtime", version.ref = "runtime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
