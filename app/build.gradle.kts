@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,6 +9,18 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
+
+// -------- Load keys.properties (project root) --------
+val keysFile = rootProject.file("keys.properties")
+val keysProps = Properties()
+if (keysFile.exists()) {
+    keysFile.inputStream().use { keysProps.load(it) }
+}
+
+// Provide a fallback if the property is missing (optional)
+val backendUrlFromKeys: String = keysProps.getProperty("BACKEND_URL")
+    ?: "https://api.your-backend.com/" // fallback — change/remove as needed
+
 
 android {
     namespace = "com.example.devops"
@@ -20,6 +34,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
+        // Expose BACKEND_URL to BuildConfig
+        buildConfigField("String", "BACKEND_URL", "\"$backendUrlFromKeys\"")
     }
 
     buildTypes {
@@ -38,9 +56,11 @@ android {
     kotlinOptions {
         jvmTarget = "11"
         freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+        //freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

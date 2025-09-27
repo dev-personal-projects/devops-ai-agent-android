@@ -15,13 +15,36 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.example.devops.BuildConfig
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import javax.inject.Named
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    
-    private const val BASE_URL = "https://your-backend-api.com/"
-    
+
+    // This is a compile-time token used for @Named injection — MUST be a const val
+    const val BASE_URL_NAMED = "BASE_URL"
+
+
+    @Provides
+    @Singleton
+    @Named(BASE_URL_NAMED)
+    fun provideBaseUrl(): String {
+        val raw = BuildConfig.BACKEND_URL.trim()
+        if (raw.isEmpty()) {
+            throw IllegalStateException("BACKEND_URL is empty — check keys.properties / buildConfigField")
+        }
+
+        val httpUrl = raw.toHttpUrlOrNull()
+            ?: throw IllegalStateException("Invalid BACKEND_URL in BuildConfig: $raw")
+
+        // Ensure trailing slash for Retrofit expectation
+        val normalized = if (httpUrl.toString().endsWith("/")) httpUrl.toString()
+        else httpUrl.toString() + "/"
+        return normalized
+    }
+
     @Provides
     @Singleton
     fun provideOkHttpClient(
@@ -41,9 +64,12 @@ object NetworkModule {
     
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        @Named(BASE_URL_NAMED) baseUrl: String
+    ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
