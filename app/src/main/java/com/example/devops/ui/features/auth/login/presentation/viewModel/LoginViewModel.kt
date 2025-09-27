@@ -16,7 +16,8 @@ data class LoginUiState(
     val isLoading: Boolean = false,
     val isLoggedIn: Boolean = false,
     val error: String? = null,
-    val user: GitHubUser? = null
+    val user: GitHubUser? = null,
+    val showWelcome: Boolean = true
 )
 
 @HiltViewModel
@@ -84,6 +85,13 @@ class LoginViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    fun setOAuthError(error: String) {
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            error = error
+        )
     }
 
     fun logout() {

@@ -29,21 +29,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.devops.ui.features.auth.login.components.ErrorMessage
 import com.example.devops.ui.features.auth.login.components.FooterSection
 import com.example.devops.ui.features.auth.login.components.GitHubLoginButton
 import com.example.devops.ui.features.auth.login.components.LogoSection
 import com.example.devops.ui.features.auth.login.components.WelcomeSection
+import com.example.devops.ui.features.auth.login.presentation.viewModel.LoginViewModel
 
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel = hiltViewModel(),
     onLoginSuccess: () -> Unit = {},
     onGithubButtonClick: () -> Unit = {},
 ) {
-    val uiState = true
+    val uiState by loginViewModel.uiState.collectAsState()
 
     // Animation states
     val infiniteTransition = rememberInfiniteTransition(label = "background")
@@ -58,11 +61,11 @@ fun LoginScreen(
     )
 
     // Handle login success
-//    LaunchedEffect(uiState) {
-//        if (uiState) {
-//            onLoginSuccess()
-//        }
-//    }
+    LaunchedEffect(uiState.isLoggedIn) {
+        if (uiState.isLoggedIn) {
+            onLoginSuccess()
+        }
+    }
 
     Box(
         modifier = modifier
@@ -88,7 +91,7 @@ fun LoginScreen(
         ) {
             // Welcome animation
             AnimatedVisibility(
-                visible = uiState,
+                visible = uiState.showWelcome,
                 enter = slideInVertically(
                     initialOffsetY = { -100 },
                     animationSpec = tween(800, easing = FastOutSlowInEasing)
@@ -110,9 +113,16 @@ fun LoginScreen(
 
             // GitHub login button
             GitHubLoginButton(
-                isLoading = false,
+                isLoading = uiState.isLoading,
                 onClick = onGithubButtonClick
             )
+
+            // Handle errors
+            uiState.error?.let { error ->
+                LaunchedEffect(error) {
+                    // Show error (you can use SnackBar or your existing error UI)
+                }
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
