@@ -120,6 +120,7 @@ fun LoginScreen(
             // Handle errors
             uiState.error?.let { error ->
                 LaunchedEffect(error) {
+                    println("An error occurred: $error")
                     // Show error (you can use SnackBar or your existing error UI)
                 }
             }
@@ -128,13 +129,13 @@ fun LoginScreen(
 
             // Error message
             AnimatedVisibility(
-                visible = true,
+                visible = uiState.error != null,
                 enter = slideInVertically() + fadeIn(),
                 exit = slideOutVertically() + fadeOut()
             ) {
                 ErrorMessage(
-                    message = "Error message",
-                    onDismiss = {}
+                    message = uiState.error ?: "",
+                    onDismiss = loginViewModel::clearError
                 )
             }
 

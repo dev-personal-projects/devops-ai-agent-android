@@ -6,7 +6,6 @@ import com.example.devops.ui.features.auth.login.data.model.GitHubCallbackReques
 import com.example.devops.ui.features.auth.login.data.model.GitHubUser
 import com.example.devops.ui.features.auth.login.data.model.OAuthUrlResponse
 import com.example.devops.ui.features.auth.login.data.storage.TokenManager
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

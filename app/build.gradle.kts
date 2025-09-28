@@ -17,9 +17,9 @@ if (keysFile.exists()) {
     keysFile.inputStream().use { keysProps.load(it) }
 }
 
-// Provide a fallback if the property is missing (optional)
+// Provide a fallback if the property is missing
 val backendUrlFromKeys: String = keysProps.getProperty("BACKEND_URL")
-    ?: "https://api.your-backend.com/" // fallback — change/remove as needed
+    ?: throw GradleException("BACKEND_URL not found in keys.properties") //fallback
 
 
 android {
