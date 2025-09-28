@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,6 +9,18 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
+
+// -------- Load keys.properties (project root) --------
+val keysFile = rootProject.file("keys.properties")
+val keysProps = Properties()
+if (keysFile.exists()) {
+    keysFile.inputStream().use { keysProps.load(it) }
+}
+
+// Provide a fallback if the property is missing
+val backendUrlFromKeys: String = keysProps.getProperty("BACKEND_URL")
+    ?: throw GradleException("BACKEND_URL not found in keys.properties") //fallback
+
 
 android {
     namespace = "com.example.devops"
@@ -20,6 +34,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
+        // Expose BACKEND_URL to BuildConfig
+        buildConfigField("String", "BACKEND_URL", "\"$backendUrlFromKeys\"")
     }
 
     buildTypes {
@@ -37,9 +55,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+        //freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -80,6 +101,14 @@ dependencies {
 
     // Hilt Navigation Compose (recommended for Compose + Hilt)
     implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
+
+
+    //retrofit
+    implementation("androidx.browser:browser:1.9.0")
+    implementation("androidx.security:security-crypto:1.1.0")
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.1.0")
 
 
 }
