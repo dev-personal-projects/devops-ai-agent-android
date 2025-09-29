@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
 
     //hilt
     id("com.google.dagger.hilt.android")
@@ -110,5 +111,13 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
     implementation("com.squareup.okhttp3:logging-interceptor:5.1.0")
 
+    // Kotlinx Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+
+    // Splash Screen
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    
+    // Image loading
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
 }

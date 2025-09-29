@@ -3,8 +3,6 @@ package com.example.devops.sharedPrefs.onBoardPref
 import android.content.Context
 import android.content.SharedPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,23 +15,17 @@ class OnboardingPreferencesManager @Inject constructor(
         Context.MODE_PRIVATE
     )
 
+    fun hasSeenOnboarding(): Boolean {
+        return prefs.getBoolean(KEY_HAS_SEEN_ONBOARDING, false)
+    }
+
+    fun setOnboardingCompleted() {
+        prefs.edit()
+            .putBoolean(KEY_HAS_SEEN_ONBOARDING, true)
+            .apply()
+    }
+
     companion object {
-        private const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
-    }
-
-    suspend fun hasSeenOnboarding(): Boolean = withContext(Dispatchers.IO) {
-        prefs.getBoolean(KEY_ONBOARDING_COMPLETED, false)
-    }
-
-    suspend fun setOnboardingCompleted() = withContext(Dispatchers.IO) {
-        prefs.edit()
-            .putBoolean(KEY_ONBOARDING_COMPLETED, true)
-            .apply()
-    }
-
-    suspend fun clearOnboarding() = withContext(Dispatchers.IO) {
-        prefs.edit()
-            .putBoolean(KEY_ONBOARDING_COMPLETED, false)
-            .apply()
+        private const val KEY_HAS_SEEN_ONBOARDING = "has_seen_onboarding"
     }
 }

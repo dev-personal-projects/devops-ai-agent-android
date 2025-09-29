@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DevOps">
         <activity
-            android:name="com.example.devops.activity.MainActivity"
+            android:name="com.example.devops.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.DevOps">
@@ -43,6 +43,18 @@
                 <data android:host="oauth" />
             </intent-filter>
 
+        </activity>
+        
+        <activity
+            android:name="com.example.devops.ui.features.auth.presentation.activity.OAuthCallbackActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="devops" android:host="oauth" />
+            </intent-filter>
         </activity>
     </application>
 

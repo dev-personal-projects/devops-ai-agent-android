@@ -12,7 +12,7 @@ val GitHubGray80 = Color(0xFF9CA3AF)      // Light gray for dark mode
 val GitHubGray40 = Color(0xFF4B5563)      // Medium gray for light mode
 val GitHubGray20 = Color(0xFF374151)      // Dark gray
 
-// Tertiary Colors - Cute accent colors
+// Tertiary Colors - Cute   accent colors
 val CutePink80 = Color(0xFFF9A8D4)        // Soft pink for dark mode
 val CutePink40 = Color(0xFFEC4899)        // Vibrant pink for light mode
 val CutePink20 = Color(0xFFDB2777)        // Deeper pink
