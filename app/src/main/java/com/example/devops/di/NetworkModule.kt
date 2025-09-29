@@ -1,105 +1,73 @@
 package com.example.devops.di
 
-import com.example.devops.ui.features.auth.login.data.api.AuthApi
-import com.example.devops.ui.features.auth.login.data.storage.TokenManager
+import com.example.devops.BuildConfig
+import com.example.devops.core.security.AuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
+import okhttp3.Authenticator
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.Response
+import okhttp3.Route
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
-import com.example.devops.BuildConfig
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import javax.inject.Named
+
+@Singleton
+class TokenAuthenticator @Inject constructor() : Authenticator {
+
+    override fun authenticate(route: Route?, response: Response): Request? {
+        // For now, return null to avoid dependency cycle
+        // Token refresh will be handled manually in the repository layer
+        return null
+    }
+}
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    // This is a compile-time token used for @Named injection — MUST be a const val
-    const val BASE_URL_NAMED = "BASE_URL"
-
-
     @Provides
     @Singleton
-    @Named(BASE_URL_NAMED)
-    fun provideBaseUrl(): String {
-        val raw = BuildConfig.BACKEND_URL.trim()
-        if (raw.isEmpty()) {
-            throw IllegalStateException("BACKEND_URL is empty — check keys.properties / buildConfigField")
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
         }
-
-        val httpUrl = raw.toHttpUrlOrNull()
-            ?: throw IllegalStateException("Invalid BACKEND_URL in BuildConfig: $raw")
-
-        // Ensure trailing slash for Retrofit expectation
-        val normalized = if (httpUrl.toString().endsWith("/")) httpUrl.toString()
-        else httpUrl.toString() + "/"
-        return normalized
     }
 
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        authInterceptor: AuthInterceptor
+        authInterceptor: AuthInterceptor,
+        tokenAuthenticator: TokenAuthenticator,
+        loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
-            .addInterceptor(
-                HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }
-            )
+            .authenticator(tokenAuthenticator)
+            .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
     }
-    
+
     @Provides
     @Singleton
-    fun provideRetrofit(
-        okHttpClient: OkHttpClient,
-        @Named(BASE_URL_NAMED) baseUrl: String
-    ): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(BuildConfig.BACKEND_URL + "/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-    }
-    
-    @Provides
-    @Singleton
-    fun provideAuthApi(retrofit: Retrofit): AuthApi {
-        return retrofit.create(AuthApi::class.java)
-    }
-}
-
-
-
-@Singleton
-class AuthInterceptor @Inject constructor(
-    private val tokenManager: TokenManager
-) : Interceptor {
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
-        val token = tokenManager.getAccessToken()
-
-        return if (token != null) {
-            val authenticatedRequest = request.newBuilder()
-                .header("Authorization", "Bearer $token")
-                .build()
-            chain.proceed(authenticatedRequest)
-        } else {
-            chain.proceed(request)
-        }
     }
 }
