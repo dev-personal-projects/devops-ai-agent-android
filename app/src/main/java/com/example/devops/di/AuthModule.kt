@@ -1,7 +1,5 @@
 package com.example.devops.di
 
-import com.example.devops.ui.features.auth.data.local.EncryptedAuthStorage
-import com.example.devops.ui.features.auth.data.local.LocalAuthDataSource
 import com.example.devops.ui.features.auth.data.remote.api.GitHubAuthApi
 import com.example.devops.ui.features.auth.data.repository.AuthRepositoryImpl
 import com.example.devops.ui.features.auth.domain.repository.AuthRepository
@@ -22,12 +20,6 @@ abstract class AuthModule {
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindLocalAuthDataSource(
-        encryptedAuthStorage: EncryptedAuthStorage
-    ): LocalAuthDataSource
 
     companion object {
         @Provides

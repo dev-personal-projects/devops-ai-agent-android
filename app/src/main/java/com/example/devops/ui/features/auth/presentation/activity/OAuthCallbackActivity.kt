@@ -24,16 +24,18 @@ class OAuthCallbackActivity : ComponentActivity() {
         val uri: Uri? = intent.data
 
         if (uri != null && uri.scheme == "devops" && uri.host == "oauth") {
-            val code = uri.getQueryParameter("code")
-            val state = uri.getQueryParameter("state")
+            val accessToken = uri.getQueryParameter("access_token")
+            val refreshToken = uri.getQueryParameter("refresh_token")
+            val userId = uri.getQueryParameter("user_id")
             val error = uri.getQueryParameter("error")
 
             when {
                 error != null -> {
                     navigateToMainWithError("OAuth failed: $error")
                 }
-                code != null && state != null -> {
-                    authViewModel.handleEvent(AuthEvent.HandleOAuthCallback(code, state))
+                accessToken != null && userId != null -> {
+                    // Store tokens and navigate to home
+                    // For now, just navigate to main - token storage will be handled later
                     navigateToMain()
                 }
                 else -> {

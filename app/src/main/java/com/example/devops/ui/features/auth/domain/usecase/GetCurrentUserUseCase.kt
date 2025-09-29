@@ -11,7 +11,7 @@ class GetCurrentUserUseCase @Inject constructor(
         return try {
             authRepository.getCurrentAuthState()
         } catch (e: Exception) {
-            AuthResult.Error(e, "Failed to get current user: ${e.message}")
+            AuthResult.Error("Failed to get current user: ${e.message}", e)
         }
     }
 }

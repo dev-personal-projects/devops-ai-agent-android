@@ -8,8 +8,7 @@ interface AuthRepository {
     suspend fun initiateGitHubOAuth(): AuthResult<String>
     suspend fun handleOAuthCallback(code: String, state: String): AuthResult<AuthState>
     suspend fun getCurrentAuthState(): AuthResult<AuthState>
-    suspend fun logout(): AuthResult<Unit>
     suspend fun refreshTokens(): AuthResult<AuthState>
+    suspend fun logout(): AuthResult<Unit>
     fun observeAuthState(): Flow<AuthState>
-    suspend fun isAuthenticated(): Boolean
 }

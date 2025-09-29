@@ -11,7 +11,7 @@ class LogoutUseCase @Inject constructor(
             authRepository.logout()
             AuthResult.Success(Unit)
         } catch (e: Exception) {
-            AuthResult.Error(e, "Logout failed: ${e.message}")
+            AuthResult.Error("Logout failed: ${e.message}", e)
         }
     }
 }

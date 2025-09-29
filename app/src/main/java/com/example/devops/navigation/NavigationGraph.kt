@@ -16,38 +16,11 @@ import com.example.devops.ui.features.home.presentation.screen.HomeScreen
 @Composable
 fun NavigationGraph(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
-    authViewModel: AuthViewModel = hiltViewModel()
+    navController: NavHostController
 ) {
-    val authState by authViewModel.screenState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(authState.authState) {
-        when (authState.authState) {
-            is AuthUiState.Authenticated -> {
-                if (navController.currentDestination?.route != Routes.Home.route) {
-                    navController.navigate(Routes.Home.route) {
-                        popUpTo(Routes.Login.route) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-            }
-            is AuthUiState.Unauthenticated -> {
-                if (navController.currentDestination?.route != Routes.Login.route) {
-                    navController.navigate(Routes.Login.route) {
-                        popUpTo(0) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-            }
-            else -> { /* Handle loading and error states */ }
-        }
-    }
-
-    val startDestination = Routes.Onboarding.route
-
     NavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = Routes.Onboarding.route,
         modifier = modifier
     ) {
         composable(Routes.Onboarding.route) {
@@ -71,11 +44,7 @@ fun NavigationGraph(
         }
 
         composable(Routes.Home.route) {
-            HomeScreen(
-                onLogout = {
-                    authViewModel.handleEvent(AuthEvent.Logout)
-                }
-            )
+            HomeScreen()
         }
     }
 }

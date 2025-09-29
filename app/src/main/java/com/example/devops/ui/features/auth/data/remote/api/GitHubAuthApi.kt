@@ -9,7 +9,7 @@ interface GitHubAuthApi {
     @GET("oauth/github/mobile")
     suspend fun initiateOAuth(): Response<OAuthInitiationResponse>
     
-    @POST("oauth/github/callback")
+    @POST("oauth/github/callback/mobile")
     suspend fun handleCallback(@Body request: OAuthCallbackDto): Response<AuthResponseDto>
     
     @POST("refresh")

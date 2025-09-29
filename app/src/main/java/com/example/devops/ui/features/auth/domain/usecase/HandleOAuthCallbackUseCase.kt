@@ -11,7 +11,7 @@ class HandleOAuthCallbackUseCase @Inject constructor(
         return try {
             authRepository.handleOAuthCallback(code, state)
         } catch (e: Exception) {
-            AuthResult.Error(e, "OAuth callback failed: ${e.message}")
+            AuthResult.Error("OAuth callback failed: ${e.message}", e)
         }
     }
 }

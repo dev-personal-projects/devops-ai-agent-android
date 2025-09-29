@@ -10,7 +10,7 @@ class AuthenticateWithGitHubUseCase @Inject constructor(
         return try {
             authRepository.initiateGitHubOAuth()
         } catch (e: Exception) {
-            AuthResult.Error(e, "Failed to initiate GitHub OAuth: ${e.message}")
+            AuthResult.Error("Failed to initiate GitHub OAuth: ${e.message}", e)
         }
     }
 }

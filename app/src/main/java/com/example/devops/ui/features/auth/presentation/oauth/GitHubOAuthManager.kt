@@ -22,7 +22,7 @@ class GitHubOAuthManager @Inject constructor(
                 openCustomTab(result.data)
             }
             is AuthResult.Error -> {
-                throw result.exception
+                throw result.exception ?: Exception(result.message)
             }
         }
     }
