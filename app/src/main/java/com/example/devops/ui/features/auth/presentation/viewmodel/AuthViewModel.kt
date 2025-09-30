@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import android.util.Log
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
@@ -48,6 +49,7 @@ class AuthViewModel @Inject constructor(
             is AuthEvent.ClearError -> clearError()
             is AuthEvent.DismissWelcomeMessage -> dismissWelcomeMessage()
             is AuthEvent.HandleOAuthCallback -> handleOAuthCallback(event.code, event.state)
+            is AuthEvent.HandleDirectTokens -> handleDirectTokens(event.accessToken, event.refreshToken, event.userId)
         }
     }
 
@@ -105,10 +107,12 @@ class AuthViewModel @Inject constructor(
 
     private fun handleOAuthCallback(code: String, state: String) {
         viewModelScope.launch {
+            Log.d("AuthViewModel", "Handling OAuth callback with code: $code, state: $state")
             _screenState.value = _screenState.value.copy(isOAuthLoading = true)
             
             when (val result = authRepository.handleOAuthCallback(code, state)) {
                 is AuthResult.Success -> {
+                    Log.d("AuthViewModel", "OAuth callback successful")
                     val uiState = if (result.data.user != null) {
                         AuthUiState.Authenticated(result.data.user)
                     } else {
@@ -120,6 +124,37 @@ class AuthViewModel @Inject constructor(
                     )
                 }
                 is AuthResult.Error -> {
+                    Log.e("AuthViewModel", "OAuth callback failed: ${result.message}")
+                    _screenState.value = _screenState.value.copy(
+                        authState = AuthUiState.Unauthenticated,
+                        isOAuthLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+            }
+        }
+    }
+
+    private fun handleDirectTokens(accessToken: String, refreshToken: String?, userId: String?) {
+        viewModelScope.launch {
+            Log.d("AuthViewModel", "Handling direct tokens from backend redirect")
+            _screenState.value = _screenState.value.copy(isOAuthLoading = true)
+            
+            when (val result = authRepository.storeDirectTokens(accessToken, refreshToken, userId)) {
+                is AuthResult.Success -> {
+                    Log.d("AuthViewModel", "Direct tokens stored successfully")
+                    val uiState = if (result.data.user != null) {
+                        AuthUiState.Authenticated(result.data.user)
+                    } else {
+                        AuthUiState.Unauthenticated
+                    }
+                    _screenState.value = _screenState.value.copy(
+                        authState = uiState,
+                        isOAuthLoading = false
+                    )
+                }
+                is AuthResult.Error -> {
+                    Log.e("AuthViewModel", "Failed to store direct tokens: ${result.message}")
                     _screenState.value = _screenState.value.copy(
                         authState = AuthUiState.Unauthenticated,
                         isOAuthLoading = false,

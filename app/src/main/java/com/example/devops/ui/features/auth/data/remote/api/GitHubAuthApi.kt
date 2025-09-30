@@ -6,11 +6,14 @@ import retrofit2.http.*
 
 interface GitHubAuthApi {
     
-    @GET("oauth/github/mobile")
-    suspend fun initiateOAuth(): Response<OAuthInitiationResponse>
+    @GET("oauth/github")
+    suspend fun initiateOAuth(@Query("mobile") mobile: Boolean = true): Response<OAuthInitiationResponse>
     
-    @POST("oauth/github/callback/mobile")
-    suspend fun handleCallback(@Body request: OAuthCallbackDto): Response<AuthResponseDto>
+    @POST("oauth/github/callback")
+    suspend fun handleCallback(
+        @Body request: OAuthCallbackDto,
+        @Query("mobile") mobile: Boolean = true
+    ): Response<AuthResponseDto>
     
     @POST("refresh")
     suspend fun refreshToken(@Body request: RefreshTokenDto): Response<AuthResponseDto>

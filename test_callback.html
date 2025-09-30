@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test OAuth Callback</title>
+</head>
+<body>
+    <h1>Test OAuth Callback</h1>
+    <button onclick="testCallback()">Test Android Callback</button>
+    
+    <script>
+        function testCallback() {
+            // This will trigger the Android app
+            window.location.href = "devops://oauth?access_token=test_token_123&refresh_token=test_refresh_456&user_id=test_user_789";
+        }
+    </script>
+</body>
+</html>
