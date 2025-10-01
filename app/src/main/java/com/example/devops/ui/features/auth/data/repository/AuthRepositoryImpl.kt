@@ -36,7 +36,7 @@ class AuthRepositoryImpl @Inject constructor(
         return try {
             android.util.Log.d("AuthRepository", "Handling OAuth callback - code: ${code.take(10)}..., state: ${state.take(10)}...")
             val request = OAuthCallbackDto(code = code, state = state)
-            val response = remoteDataSource.handleCallback(request, mobile = true)
+            val response = remoteDataSource.handleCallback(request)
             
             android.util.Log.d("AuthRepository", "Response code: ${response.code()}, isSuccessful: ${response.isSuccessful}")
             
