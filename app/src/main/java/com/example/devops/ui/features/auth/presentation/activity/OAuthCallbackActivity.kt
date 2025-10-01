@@ -62,7 +62,7 @@ class OAuthCallbackActivity : ComponentActivity() {
                     navigateToMain()
                 }
                 code != null && state != null -> {
-                    Log.d("OAuthCallback", "Received OAuth code, need to exchange for tokens")
+                    Log.d("OAuthCallback", "Received OAuth code, exchanging for tokens via API")
                     authViewModel.handleEvent(AuthEvent.HandleOAuthCallback(code, state))
                     finish()
                 }
